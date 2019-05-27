@@ -1,0 +1,41 @@
+{% extends "main.html" %}
+{% block style %}
+  <style>
+    .image-container{ text-align:center; margin: 20px 0px 20px 0px; }
+    dt{ margin-bottom: 10px}
+    .school-link{ margin-top: 5px}
+  </style>
+{% endblock %}
+{% block content %}
+  <div class="container page">
+    <div class="header">
+      <h2>Sort results</h2>
+    </div>
+    {% for school in schools %}
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          {{ school.name }}
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-sm-6 col-md-6 col-xs-12 image-container">
+              <img class="" src="{{ url_for('static', filename='img/school'+school.schid|string+'.jpg') }}">
+            </div>
+	    <div class="col-sm-6 col-md-6 col-xs-12">
+              <dl class="dl-horizontal">
+  	        <dt>Name :</dt>
+  	        <dd>{{ school.name }}</dd>
+  	        <dt>City :</dt>
+  	        <dd>{{ school.city }}</dd>
+  	        <dt>District :</dt>
+  	        <dd>{{ school.district }}</dd>
+	        <dt class="school-link"><a href="{{ url_for('school_description', schid=school.schid) }}">More information</a></dt>
+	      </dl>
+	    </div>
+	  </div>
+        </div>	
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}  
+

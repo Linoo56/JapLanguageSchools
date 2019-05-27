@@ -1,0 +1,26 @@
+{% extends "main.html" %}
+{% block style %}
+{% endblock %}
+{% block content %}
+  <div class="container page">
+    <div class="header">
+      <h1>Durations</h1> 
+    </div>
+    <ul class="list-group">
+    {% for duration in durations %}
+      <a href="{{ url_for('sort_durations', duration=duration[0]) }}"><li class="list-group-item">
+      {% for value in duration[1] %}
+        <span class="badge">{{ value[0] }}</span>
+      {% endfor %}
+      {% if duration[0] == '12months' %}
+      12 months
+      {% elif duration[0] == '18months'%}
+      18 months
+      {% elif duration[0] == '24months'%}
+      24 months
+      {% endif %}
+      </li></a>
+    {% endfor %}
+    </ul>
+  </div>
+{% endblock %}

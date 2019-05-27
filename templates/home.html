@@ -1,0 +1,82 @@
+	{% extends "main.html" %}
+{% block style %}
+  <style>
+    .alert-info{
+      text-align:center;
+    }
+    .thumbnail {
+      padding: 10px;
+    }
+    .subtitle {
+      margin:15px 0px 15px 0px;
+    }
+    .button-container {
+      text-align: center;
+      padding-top: 15px;
+    }
+    .schools-list {
+      width: 50%;
+      font-size: large;
+    }
+    img {
+      max-width:350px;
+      object-fit:cover;
+    }
+  </style>
+{% endblock %}
+{% block content %}
+  <div class="container page">
+    <div class="header">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-info">
+              <h3>{{ message }}</h3>
+            </div>
+          {% endfor %}
+        {% endif %}	
+      {% endwith %}  
+      <h1>Welcome on Japanese Language Schools directory !</h1>
+      <h2>For students, by students</h2> 
+    </div>
+
+    <div class="jumbotron">
+      <p>Welcome on JapLanguageSchools !<br/>
+	This website has been created in order to help who wants to study japanese in Japan for at least a year. It contains all informations about schools and provided programs in each. You will find global information and estimed prices for each programs.<br/>
+        You can also log in to keep a school or a program as favorite, and to give a review about a school. All reviews have been approved by an administrator before being published.<br/> 
+        </p>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-6 col-md-4">
+        <div class="thumbnail">
+          <img src="{{ url_for('static', filename='img/city.jpg') }}" class="img-thumbnail">
+          <div class="caption">
+            <h3 class="subtitle">Schools by location</h3>
+            <div><a href="{{ url_for('cities') }}" class="btn btn-primary" role="button">Check all cities</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-4">
+        <div class="thumbnail">
+          <img src="{{ url_for('static', filename='img/yens.png') }}" class="img-thumbnail">
+          <div class="caption">
+            <h3 class="subtitle">Programs by price ranges</h3>
+            <div><a href="{{ url_for('prices') }}" class="btn btn-primary" role="button">Check prices</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-4">
+        <div class="thumbnail">
+          <img src="{{ url_for('static', filename='img/curriculumschedule.png') }}" class="img-thumbnail">
+          <div class="caption">
+            <h3 class="subtitle">Programs by duration</h3>
+            <div><a href="{{ url_for('durations') }}" class="btn btn-primary" role="button">Check all durations</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="button-container"><a role="button" href="{{ url_for('listing_schools') }}" class="btn btn-primary schools-list">You can also browse the entire school list</a></div>
+    <div class="button-container"><a role="button" href="{{ url_for('listing_programs') }}" class="btn btn-primary schools-list">Or you can browse the entire program list</a></div>
+  </div>
+{% endblock %}

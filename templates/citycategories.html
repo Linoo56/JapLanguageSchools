@@ -1,0 +1,20 @@
+{% extends "main.html" %}
+{% block style %}
+{% endblock %}
+{% block content %}
+  <div class="container">
+    <div class="header">
+      <h1>Cities</h1> 
+    </div>
+    <ul class="list-group">
+    {% for city in cities %}
+      <a href="{{ url_for('sort_cities', city=city[0]) }}"><li class="list-group-item">
+      {% for value in city[1] %}
+        <span class="badge">{{ value[0] }}</span>
+      {% endfor %}
+      {{ city[0] }}
+      </li></a>
+    {% endfor %}
+    </ul>
+  </div>
+{% endblock %}

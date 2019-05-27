@@ -1,0 +1,263 @@
+{% extends "main.html" %}
+{% block style %}
+<script src="{{ url_for('static', filename='raty/jquery.raty.js') }}"></script>
+<style>
+  td:nth-child(2){
+    text-align-last: end;
+  }
+  .google-maps {
+    border: 0;
+    width: -webkit-fill-available;
+    height: 400px;
+  }
+  dd {
+    margin-bottom: 5px;
+  }
+  tr .sub{
+    font-weight: normal;
+  }
+  .school-logo{
+    text-align: center;
+    margin: 20px;
+    margin-bottom: 30px;
+  }
+  .heart-container span{
+    font-size: x-large;
+  }
+  .dl-horizontal.school dd{
+    margin-left: 110px
+  }
+  .dl-horizontal.school dt{
+    text-align: left;
+    padding-left: 30px;
+    width: 110px
+  }
+  .heart-container{
+    padding:10px 0 0 10px;
+    text-align:center;
+  }
+  .button-container{
+    margin-bottom: 20px
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="container page">
+      <div class="header">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-info">
+              <h3>{{ message }}</h3>
+            </div>
+          {% endfor %}
+        {% endif %}	
+      {% endwith %}  
+        <h1>{{ school.name }}</h1> 
+        <h2>Detailled information :</h2>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <div class="row">
+	   {% if session['logged_in'] %}
+	    <div class="col-md-1 heart-container">
+	    {% if fav %}
+	      <a href="{{ url_for('del_school_favorite', schid=school.schid) }}"><span class="glyphicon glyphicon-heart" aria-hidden="true"></span></a>
+	    {% else %}	
+	      <a href="{{ url_for('add_school_favorite', schid=school.schid) }}"><span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span></a>
+	    {% endif %}
+	    </div>
+            <div class="col-md-5">
+	   {% else %}
+	    <div class="col-md-6">
+	   {% endif %}
+              <div class="school-logo"><img src="{{ url_for('static', filename='img/school'+school.schid|string+'.jpg') }}"></div>
+	      <dl class="dl-horizontal school">
+		<dt>Name :</dt>
+		<dd>{{ school.name }}</dd>
+		<dt>City :</dt>
+		<dd>{{ school.city }}</dd>
+		{% if school.district != None %}
+		  <dt>District :</dt>
+		  <dd>{{ school.district }}</dd>
+		{% endif %}
+		<dt>Website :</dt>
+		<dd><a href="{{ school.website }}">{{ school.website }}</a></dd>
+        {% if documents %}
+        <dt>Documents :</dt>
+        <div class="list-group">
+            {% for document in documents %}
+                <button type="button" class="list-group-item">{{ document.titre }}</button>
+            {% endfor %}
+        </div>
+        {% endif %}
+	      </dl>
+	    </div>
+              <div class="col-md-6">
+                <iframe class="google-maps" src="{{school.googleLink}}" allowfullscreen="allowfullscreen"></iframe>
+              </div>
+            </div>
+        </div>
+      </div>
+      {% if programs|length %}
+      <div class="panel with-nav-tabs panel-default">
+         <div class="panel-heading">
+           <ul class="nav nav-tabs">
+	   {% for program in programs %}
+             <li id="tabs"><a href="#tab{{loop.index}}default" data-toggle="tab">Program {{loop.index}}</a></li>
+           {% endfor %}
+           </ul>
+         </div>
+	 <div class="panel-body">
+	   <div class="tab-content">
+	   {% for program in programs%}
+	     <div class="tab-pane fade" id="tab{{loop.index}}default">
+               <div class="row">
+	        {% if session['logged_in'] %}
+	         <div class="col-md-1 heart-container">
+	         {% if program.proId in progfav %}
+	           <a href="{{ url_for('del_program_favorite', schid=school.schid, progid=program.proId) }}"><span class="glyphicon glyphicon-heart" aria-hidden="true"></span></a>
+	         {% else %}	
+	           <a href="{{ url_for('add_program_favorite', schid=school.schid, progid=program.proId) }}"><span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span></a>
+	         {% endif %}
+	         </div>
+                 <div class="col-md-5">
+	         {% else %}
+	         <div class="col-md-6">
+	         {% endif %}
+	           <dl class="dl-horizontal">
+		     <dt>Duration :</dt>
+		     <dd>{{ program.duration }} months</dd>
+		     {% if program.accoType != ''%}
+		     <dt>Accomodation type :</dt>
+		     <dd>{{ program.accoType }}</dd>
+		     {% endif %}
+		     <dt>Visa Support :</dt>
+		     <dd>{{ program.visaSupp }}</dd>
+		     <dt>EJU preparation :</dt>
+		     <dd>{{ program.eju }}</dd>
+		     <dt>JLPT preparation :</dt>
+		     <dd>{{ program.jlpt }}</dd>
+		     <dt>Additionnal notes :</dt>
+		     <dd>{{ program.notes }}</dd>
+	           </dl>
+	         </div>
+                 <div class="col-md-6">
+	           <div class="panel panel-default">
+                     <div class="panel-heading">Price</div>
+                       <table class="table">
+                         <tbody>
+			   <tr>
+                   	     <td><b>Application fee :</b></td>
+			     {% if program.appliFee is number %}
+                    	     <td>{{ format_price(program.appliFee) }} yens</td>
+			     {% else %}
+			     <td>Included in the course fee</td>
+			     {% endif %}
+               		   </tr>
+			   <tr>
+                             <td><b>Course fee :</b></td>
+                             <td>{{ format_price(program.courseFee) }} yens</td>
+                           </tr>
+			   {% if program.accoFee is number %}
+			   <tr>
+                             <td><b>Accomodation fee :</b></td>
+                             <td>{{ format_price(program.accoFee) }} yens</td>
+                           </tr>
+			   {% else %}
+			   <tr>
+                             <td><b>Accomodation fee :</b></td>
+                             <td>Not calculated</td>
+                           </tr>
+			   {% endif %}
+			   {% if program.accoFee is number and program.appliFee is not number %}
+                           <tr>
+                             <td><b>Total fee :</b></td>
+                             <td>{{ format_price(program.courseFee+program.accoFee) }} yens</td>
+                           </tr>
+			   <tr>
+                             <td><b>Price per month (yens):</b></td>
+                             <td>{{ format_price((program.courseFee+program.accoFee)/program.duration) }} yens</td>
+                           </tr>
+			   <tr>
+                             <td><b>Price per month ({{ currency[1] }}):</b></td>
+                             <td>{{ format_price(((program.courseFee+program.accoFee)/program.duration)/currency[0]) }} {{currency[1]}}</td>
+                           </tr>	
+			   {% elif program.accoFee is number %}
+                           <tr>
+                             <td><b>Total fee :</b></td>
+                             <td>{{ format_price(program.appliFee+program.courseFee+program.accoFee) }} yens</td>
+                           </tr>
+			   <tr>
+                             <td><b>Price per month (yens):</b></td>
+                             <td>{{ format_price((program.appliFee+program.courseFee+program.accoFee)/program.duration) }} yens</td>
+                           </tr>
+			   <tr>
+                             <td><b>Price per month ({{ currency[1] }}):</b></td>
+                             <td>{{ format_price(((program.appliFee+program.courseFee+program.accoFee)/program.duration)/currency[0]) }} {{currency[1]}}</td>
+                           </tr>
+			   {% endif %}
+                         </tbody>
+                       </table>
+                     </div>
+                   </div>
+	         </div>
+               </div>
+	   {% endfor %}
+	   </div>
+	 </div>
+      </div>
+     {% endif %}
+
+     {% if session['logged_in'] and userReview == 0%}
+         <div class="button-container"><a href="{{ url_for('submit_review', schid=school.schid) }}" class="btn btn-primary btn-block" role="button"><h4>You can submit a review of the school</h4></a></div>
+     {% endif %}
+     <div class="panel panel-default">
+       <div class="panel-heading">
+         <h3 class="panel-title">Reviews of the school</h3>
+       </div>
+       <div class="panel-body">
+       {% if reviews %}
+	 {% for review in reviews%}
+	   <div class="panel panel-default">
+	     <div class="panel-body">
+	       <div class="row">
+		 <div class="col-md-2">
+		   <p>{{ review[1] }}</p>
+		   <p>{{ review[2] }}</p>
+		   <p>{{ review[0].checkingDate }}</p>
+		 </div>
+		 <div class="col-md-10">
+		   <div class="raty" data-score="{{ review[0].score }}"></div>
+		   <p>{{ review[0].content }}</p>
+		 </div>
+	       </div>
+	     </div>
+	   </div>
+	 {% endfor %}
+       {% else %}
+       <p>No review for now</p>
+       {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+var x = document.querySelectorAll("li#tabs");
+x[0].setAttribute("class", "active"); 
+var y = document.querySelectorAll("div:first-child.tab-pane.fade")
+y[0].setAttribute("class", "tab-pane fade in active")
+
+	$('.raty').raty({
+                score: function() {
+                        return $(this).attr('data-score');
+                },
+                readOnly : true,
+                path: '/static/raty/images',
+        });
+
+</script> 
+{% endblock %}

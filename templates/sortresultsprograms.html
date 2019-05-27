@@ -1,0 +1,45 @@
+{% extends "main.html" %}
+{% block style %}
+  <style>
+    .image-container{ text-align:center; margin: 20px 0px 20px 0px; }
+    dt{ margin-bottom: 10px}
+    .school-link{ margin-top: 5px}
+  </style>
+{% endblock %}
+{% block content %}
+  <div class="container page">
+    <div class="header">
+      <h2>Sort results</h2>
+    </div>
+    {% for program in programs %}
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          {{ program[0].name }}
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-sm-6 col-md-6 col-xs-12 image-container">
+              <img class="" src="{{ url_for('static', filename='img/school'+program[0].schid|string+'.jpg') }}">
+            </div>
+	    <div class="col-sm-6 col-md-6 col-xs-12">
+              <dl class="dl-horizontal">
+  	        <dt>Name :</dt>
+  	        <dd>{{ program[0].name }}</dd>
+  	        <dt>City :</dt>
+  	        <dd>{{ program[0].city }}</dd>
+  	        <dt>District :</dt>
+  	        <dd>{{ program[0].district }}</dd>
+  	        <dt>Program duration :</dt>
+  	        <dd>{{ program[1].duration }}</dd>
+  	        <dt>Accomodation type :</dt>
+  	        <dd>{{ program[1].accoType }}</dd>
+	        <dt class="school-link"><a href="{{ url_for('school_description', schid=program[0].schid) }}">More information</a></dt>
+	      </dl>
+	    </div>
+	  </div>
+        </div>	
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}  
+

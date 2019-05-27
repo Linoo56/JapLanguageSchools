@@ -1,0 +1,111 @@
+{% extends "main.html" %}
+
+{% block style %}
+ <script src="{{ url_for('static', filename='raty/jquery.raty.js') }}"></script>
+  <style>
+    .favorite-container{
+  	 display:flex;
+  	 justify-content:center;
+ 	 align-items:center;
+     }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="container page">
+    <div class="header">
+      <h1>Your profile</h1>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Personnal information
+      </div>
+      <div class="panel-body">
+	<b>Displayed name :</b> {{ user[1] }}<br/>
+	<b>Email :</b> {{ user[0] }} <br/>
+	<b>Country :</b> {{ user[2] }} <br/>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Your favorites
+      </div>
+      <div class="panel-body">
+	<div class="row favorite-container">
+	  {% for favorite in favorites %}
+	  <div class="col-xs-6 col-md-3">
+	    <a href="{{ url_for('school_description', schid=favorite[0]) }}" class="thumbnail">
+              <img src="{{ url_for('static', filename='img/school'+favorite[0]+'.jpg') }}">
+            </a>
+          </div>
+	  {% endfor %}
+        </div>
+	   <a href="{{url_for('favorites')}}">See more</a>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Reviews given
+      </div>
+      <div class="panel-body">
+      {% for review in reviews %}
+      {% if review[0].status == 2%}
+        <div class="panel panel-danger">
+	  <div class="panel-heading">{{review[1]}}</div>
+	  <div class="panel-body">
+	  <dl class="dl-horizontal">
+	    <dt>School :</dt>
+	    <dd>{{review[1]}}</dd>
+	    <dt>Score :</dt>
+	    <dd><div class="raty" data-score="{{review[0].score}}"></div></dd>
+	    <dt>Content :</dt>
+	    <dd>{{review[0].content}}</dd>
+	    <dt>Status :</dt>
+	    <dd><span style="color:red" class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span></dd>
+      {% elif review[0].status == 1%}
+	<div class="panel panel-success">
+	  <div class="panel-heading">{{review[1]}}</div>
+	  <div class="panel-body">
+	  <dl class="dl-horizontal">
+	    <dt>School :</dt>
+	    <dd>{{review[1]}}</dd>
+	    <dt>Score :</dt>
+	    <dd><div class="raty" data-score="{{review[0].score}}"></div></dd>
+	    <dt>Content :</dt>
+	    <dd>{{review[0].content}}</dd>
+	    <dt>Status :</dt>
+	    <dd><span style="color:green" class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span></dd>
+      {% else %}
+	<div class="panel panel-warning">
+	  <div class="panel-heading">{{review[1]}}</div>
+	  <div class="panel-body">
+	  <dl class="dl-horizontal">
+	    <dt>School :</dt>
+	    <dd>{{review[1]}}</dd>
+	    <dt>Score :</dt>
+	    <dd><div class="raty" data-score="{{review[0].score}}"></div></dd>
+	    <dt>Content :</dt>
+	    <dd>{{review[0].content}}</dd>
+	    <dt>Status :</dt>
+	    <dd><span style="color:orange" class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span></dd>
+      {% endif %} 
+        </div>
+	</div>
+      {% endfor %}
+      </div>
+    </div>
+
+  </div>
+{% endblock %}
+{% block scripts %}
+<script>
+        $('.raty').raty({
+                score: function() {
+   			return $(this).attr('data-score');
+ 		},
+		readOnly : true,
+                path: '/static/raty/images',
+        });
+</script>
+{% endblock %}
+

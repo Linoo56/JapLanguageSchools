@@ -1,0 +1,114 @@
+<!doctype html>
+<head>
+	<title>Set09103 - Japanese schools in Japan</title>
+	<script type="text/javascript" src=" {{ url_for('static', filename='js/jquery-3.3.1.min.js') }}"></script>
+	<script type="text/javascript" src=" {{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+	<link type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel= "stylesheet" />
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.5.0/css/all.css' integrity='sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU' crossorigin='anonymous'>
+
+    <style>
+	  .header{padding-bottom : 15px}
+	  .panel-heading{font-weight : bold;
+			 font-size : 18px}
+	  .navbar-sticky-bottom{color : #9d9d9d;
+			       text-align : center;
+			       padding-top : 5px;
+                               margin-bottom : 0; 
+			       position: fixed;
+                               bottom: 0px;
+                               width: 100%;}
+          .container.page{margin-bottom : 100px}
+	</style>
+	{% block style %} {% endblock %}
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{{ url_for('root') }}">Home</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li><a href="{{ url_for('listing_schools') }}">Schools</a></li>
+        <li><a href="{{ url_for('listing_programs') }}">Programs</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Categories<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="{{ url_for('cities') }}">Location</a></li>
+            <li><a href="{{ url_for('prices') }}">Prices</a></li>
+            <li><a href="{{ url_for('durations') }}">Duration</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class='fas fa-euro-sign'></i><span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="{{ url_for('change_currency', currency='dollars') }}"><i class='fas fa-dollar-sign'></i></a></li>
+            <li><a href="{{ url_for('change_currency', currency='pounds') }}"><i class='fas fa-pound-sign'></i></a></li>
+            <li><a href="{{ url_for('change_currency', currency='euros') }}"><i class='fas fa-euro-sign'></i></a></li>
+          </ul>
+        </li>
+      </ul>
+      {% if session['logged_in'] %}
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ session['user_name'] }}<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="{{ url_for('profile') }} ">My profile</a></li>
+            <li><a href="{{ url_for('favorites') }}">My favorites</a></li>
+            <li><a href="{{ url_for('logout') }}">Log out</a></li>
+          </ul>
+        </li>
+      </ul>
+      {% else %}
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="{{ url_for('login_page') }}">Log in</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="{{ url_for('register_page') }}">Register</a></li>
+      </ul>
+      {% endif %}
+      <form class="navbar-form navbar-right" action="{{ url_for('search') }}" method="post">
+        <div class="form-group">
+          <input type="text" class="form-control" id="value" name="value" required>
+        </div>
+        <button type="submit" class="btn btn-default">Search</button>
+      </form>
+    </div>
+  </div>
+</nav>  
+	
+    {% block content %} {% endblock %}
+
+<nav class="navbar navbar-default navbar-sticky-bottom navbar-inverse">
+  <div id="navbarCollapse" class="collapse navbar-collapse">
+   © 2018 Copyright:Alexandra Roche <br/>
+   Created as coursework of Advanced Web Technologies course (set09103) in Edinburgh Napier University
+  </div>
+  <div>
+      <a href="#">About us</a>
+      <a href="{{ url_for('contact') }}">Contact</a>
+  </div>
+</nav>
+
+{% block scripts %}  
+{% endblock %}
+<script type="text/javascript">
+  var currencies = ['euro', 'dollar', 'pound']
+
+</script>
+
+
+</body>
+</html>

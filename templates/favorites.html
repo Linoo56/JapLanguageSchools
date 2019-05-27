@@ -1,0 +1,109 @@
+{% extends "main.html" %}
+{% block style %}
+  <style>
+    .program-container{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .image-container{
+      text-align:center;
+      margin:20px 0px 20px 0px;
+    }
+    dt{
+      margin-bottom:10px
+    }
+    .school-link{
+      margin-top:5px
+    }
+  </style>
+{% endblock %}
+{% block content %}
+  <div class="container page">
+    <div class="header">
+      <h2>Your favorites</h2>
+    </div>      
+    {% for favorite in favorites %}
+    {% if favorite[0] == 1 %}
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          {{ favorite[1].name }}
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-sm-6 col-md-6 col-xs-12 image-container">
+              <img class="" src="{{ url_for('static', filename='img/school'+favorite[1].schid|string+'.jpg') }}">
+            </div>
+	    <div class="col-sm-6 col-md-6 col-xs-12">
+              <dl class="dl-horizontal">
+  	        <dt>Name :</dt>
+  	        <dd>{{ favorite[1].name }}</dd>
+  	        <dt>City :</dt>
+  	        <dd>{{ favorite[1].city }}</dd>
+  	        <dt>District</dt>
+  	        <dd>{{ favorite[1].district }}</dd>
+	        <dt class="school-link"><a href="{{ url_for('school_description', schid=favorite[1].schid) }}">More informition</a></dt>
+	      </dl>
+	    </div>
+	  </div>
+        </div>	
+      </div>
+    {% elif favorite[0] == 2 %}
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Program : {{ favorite[2] }}
+        </div>
+        <div class="panel-body">
+          <div class="row program-container">
+            <div class="col-sm-2 col-md-2 col-xs-12 image-container">
+              <img class="img-responsive" src="{{ url_for('static', filename='img/school'+favorite[1].schId|string+'.jpg') }}">
+            </div>
+	    <div class="col-sm-5 col-md-5 col-xs-12">
+              <dl class="dl-horizontal">
+	        <dt>Duration :</dt>
+                <dd>{{ favorite[1].duration }} months</dd>
+                {% if favorite[1].accoType != ''%}
+                <dt>Accomodation type :</dt>
+                <dd>{{ favorite[1].accoType }}</dd>
+                {% endif %}
+        	<dt class="school-link"><a href="{{ url_for('school_description', schid=favorite[1].schId) }}">More informition</a></dt>
+	      </dl>
+	    </div>
+	    <div class="col-sm-5 col-md-5 col-xs-12">
+	      <table class="table">
+                 <tbody>
+                   <tr>
+                     <td><b>Application fee :</b></td>
+                     <td>{{ format_price(favorite[1].appliFee) }} yens</td>
+                   </tr>
+                   <tr>
+                     <td><b>Course fee :</b></td>
+                     <td>{{ format_price(favorite[1].courseFee) }} yens</td>
+                   </tr>
+                   {% if favorite[1].accoFee is number %}
+                   <tr>
+                     <td><b>Accomodation fee :</b></td>
+                     <td>{{ format_price(favorite[1].accoFee) }} yens</td>
+                   </tr>
+                   {% else %}
+                   <tr>
+                     <td><b>Accomodation fee :</b></td>
+                     <td>Not calculated</td>
+                   </tr>
+                   {% endif %}
+                   {% if favorite[1].accoFee is number %}
+                   <tr>
+                     <td><b>Total fee :</b></td>
+                     <td>{{ format_price(favorite[1].appliFee+favorite[1].courseFee+favorite[1].accoFee) }} yens</td>
+                   </tr>
+                   {% endif %}
+                 </tbody>
+              </table>
+	    </div>
+          </div>
+        </div>	
+      </div>
+    {% endif %} 
+    {% endfor %}
+  </div>
+{% endblock %}

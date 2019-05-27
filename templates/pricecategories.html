@@ -1,0 +1,22 @@
+{% extends "main.html" %}
+{% block style %}
+{% endblock %}
+{% block content %}
+  <div class="container">
+    <div class="header">
+      <h1>Price categories</h1> 
+    </div>
+    <ul class="list-group">
+    {% for price in prices %}
+      <a href="{{ url_for('sort_prices', price_range=price[0]) }}"><li class="list-group-item">
+        <span class="badge">{{ price[1] }}</span>
+      {% if price[0] == 'U1000' %}
+      Less than 1000{{currency[1]}} per month
+      {% elif price[0] == 'O1000'%}
+      More than 1000{{currency[1]}} per month
+      {% endif %}
+      </li></a>
+    {% endfor %}
+    </ul>
+  </div>
+{% endblock %}

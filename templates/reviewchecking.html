@@ -1,0 +1,53 @@
+{% extends "main.html" %}
+{% block style %}
+  <script src="{{ url_for('static', filename='raty/jquery.raty.js') }}"></script>
+  <style>
+    dt>h4{
+      margin-top :0;
+    }
+    hr{
+      margin-top :15px;
+    }
+    .glyphicon {
+      font-size: 15px;
+    }
+  </style>
+{% endblock %}
+{% block content %}
+  <div class="container page">
+    <div class="header">
+      <h2>Review about {{school}} by {{user}}</h2>
+    </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Review
+        </div>
+        <div class="panel-body">
+	    <div class="col-sm-6 col-md-6 col-xs-12">
+              <dl class="dl-horizontal">
+  	        <dt><h4>Score :</h4></dt>
+  	        <dd class="review-descri"><div class="raty"></div></dd>
+  	        <dt><h4>Content :</h4></dt>
+  	        <dd class="review-descri">{{ review.content }}</dd>
+  	        <hr>
+		<dt><h4>Action :</h4></dt>
+  	        <dd class="review-descri">
+		  <div class="button-container"><a href="{{ url_for('accept_review', reviewid=reviewid) }}" role="button" class="btn btn-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></a>
+		  <a href="{{ url_for('refuse_review', reviewid=reviewid) }}" role="button" class="btn btn-danger"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></div>
+		</dd>
+	      </dl>
+	    </div>
+        </div>	
+      </div>
+  </div>
+{% endblock %}  
+{% block scripts %}
+<script>
+	$('.raty').raty({
+		score : {{review.score}},
+		readOnly : true,
+		path: '/static/raty/images',
+	});
+</script>
+{% endblock %}
+

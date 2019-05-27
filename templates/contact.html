@@ -1,0 +1,151 @@
+{% extends "main.html" %}
+{% block style %}
+{% endblock %}
+{% block content %}
+  <div class="container page">
+
+    <div class="header">
+    <h2>Contact us</h2>
+    </div>
+
+    <form method="post" action="{{ url_for('contact') }}" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="inputType">You are :</label>
+        <select id="inputType" name="inputType" class="form-control">
+          <option disabled selected value> -- Select an option -- </option>
+          <option value="school">A school</option>
+          <option value="user">A user</option>
+        </select>
+      </div>
+
+      <!-- Si la personne est un représentant (école) -->
+      <div id="displaySchool" style="display: none">
+
+          <div class="form-group">
+            <label for="inputSchoolName">School name</label>
+            <input type="text" class="form-control" id="inputSchoolName" name="inputSchoolName" placeholder="School name">
+          </div>
+
+
+          <div class="form-group">
+            <label for="inputSchoolTopic">Topic</label>
+            <select id="inputSchoolTopic" name="inputSchoolTopic" class="form-control">
+              <option disabled selected value> -- Select an option -- </option>
+              <option value="provideDoc">Providing documents</option>
+              <option value="updatePrices">Updating prices</option>
+              <option value="UpdateInfo">Updating information</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group" id="inputDocument" style="display: none">
+              <div>
+                <label>Document</label>
+              </div>
+              <div class="col-lg-12 form-group">
+                  <div class="col-lg-6">
+                     <div class="input-group" id="uploadFile">
+                        <label class="input-group-btn">
+                             <span class="btn btn-primary">
+                                 Browse&hellip; <input type="file" style="display: none;" accept="application/pdf" multiple name="datafile">
+                             </span>
+                        </label>
+                        <input type="text" class="form-control" readonly>
+                     </div>
+                  </div>
+              </div>
+          </div>
+
+      </div>
+
+
+      <!-- Si la personne est un user -->
+      <div id="displayUser" style="display: none">
+
+          <div>
+            <label for="inputName">Name</label>
+            <input type="text" class="form-control" id="inputName" name="inputName" placeholder="text">
+          </div>
+
+          <div class="form-group">
+            <label for="inputTopicUser">Topic</label>
+            <select id="inputTopicUser" name="inputUser" class="form-control">
+              <option disabled selected value> -- Select an option -- </option>
+              <option value="reportBug">Report bug</option>
+              <option value="missingInfo">Missing information</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+      </div>
+
+      <div class="form-group">
+        <label for="inputMessage">Message</label>
+        <textarea required class="form-control" id="inputMessage" name="inputMessage" placeholder="Message" rows="8"></textarea>
+      </div>
+
+
+      <div>
+      <button type="submit" class="btn btn-default">Send message</button>
+      </div>
+
+    </form>
+
+  </div>
+
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    $("select#inputType").change(function(){
+    var selectedType = $(this).children("option:selected").val();
+    if (selectedType == "school") {
+        $("div#displayUser").hide();
+        $("div#displaySchool").show();
+    }
+    else if (selectedType == "user"){
+        $("div#displaySchool").hide();
+        $("div#displayUser").show();
+    }
+    });
+
+    $("select#inputSchoolTopic").change(function(){
+    var selectedType = $(this).children("option:selected").val();
+    if (selectedType == "provideDoc") {
+        $("div#inputDocument").show();
+    }
+    else {
+        $("div#inputDocument").hide();
+    }
+    });
+
+    });
+
+    $(function() {
+        // We can attach the `fileselect` event to all file inputs on the page
+         $(document).on('change', ':file', function() {
+         var input = $(this),
+         numFiles = input.get(0).files ? input.get(0).files.length : 1,
+         label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+         input.trigger('fileselect', [numFiles, label]);
+    });
+
+    // We can watch for our custom `fileselect` event like this
+    $(document).ready( function() {
+        $(':file').on('fileselect', function(event, numFiles, label) {
+
+            var input = $(this).parents('.input-group').find(':text'),
+                log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+            if( input.length ) {
+                input.val(log);
+            } else {
+                if( log ) alert(log);
+            }
+        });
+    });
+
+});
+</script>
+{% endblock %}

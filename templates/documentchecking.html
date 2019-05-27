@@ -1,0 +1,30 @@
+{% extends "main.html" %}
+
+{% block style %}
+{% endblock %}
+
+{% block content %}
+    <div class="container page">
+    <div class="header">
+      <h2>Document about {{school}}</h2>
+    </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Document
+        </div>
+        <div class="panel-body">
+            <div class="col-sm-6 col-md-6 col-xs-12">
+                 <a href="{{ url_for('static', filename="uploads/"+filename) }}">Link to the document</a>
+            <dt><h4>Action :</h4></dt>
+              <dd class="review-descri">
+              <div class="button-container"><a href="{{ url_for('accept_docu', filename=filename) }}" role="button" class="btn btn-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></a>
+              <a href="{{ url_for('refuse_docu', filename=filename) }}" role="button" class="btn btn-danger"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></div>
+              </dd>
+            </div>
+        </div>
+      </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
